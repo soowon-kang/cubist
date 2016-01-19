@@ -1,9 +1,10 @@
 Auther: Soowon Kang
 
-grading.py can grade solution.py file which has a main() function.
-You have to create some input files first, if it needs in order to grade a problem.
+The grading.py can grade solution.py file which has a main() function.
+You have to create all input/solution files if it is needed to grade a problem.
 
 The names of input files should be 'input*.txt'.(* is a number.)
+The names of soluiton files should be 'sol*.txt'.(* is a number.)
 
 An excution example is below.
 
@@ -24,6 +25,6 @@ An excution example is below.
     $ cat output0.py
     <type 'str'> 417
     <type 'int'> 115
-    TIME: 0.000118017196655
+    EXCUTION TIME: 0.000118017196655
 
 

@@ -22,15 +22,28 @@ class Reader(object):
         self.readers = readers
 
     def readline(self):
-        """sys.stdin can be variable r."""
-        a = None
+        """sys.stdin can be variable r. 
+        The last element of readers must be file."""
+        temp = None
         for r in self.readers:
-            a = r.readline()
-        return a
+            temp = r.readline()
+        return temp
+
+def is_matched(candidate, solution):
+    assert file == type(candidate)
+    assert file == type(solution)
+
+    candidate_read_lines = candidate.readlines()
+    solution_read_lines = solution.readlines()
+
+    candidate_read_lines.pop(-1)
+
+    return candidate_read_lines == solution_read_lines
 
 if __name__ == "__main__":
     input_file_name = 'input'
     output_file_name = 'output'
+    solution_file_name = 'sol'
     test_case = input('How many input files? ')
 
     save_input = sys.stdin
@@ -45,13 +58,25 @@ if __name__ == "__main__":
         sys.stdin = Reader( INPUT )
         sys.stdout = Writer( OUTPUT )
         t1 = time.time()
-        solution.main()     # from solution
+        try:
+            solution.main()     # from solution.py
+        except:
+            pass
         t2 = time.time() - t1
-        print 'EXCUTION TIME for file(%d): '%(i)+str(t2)
+        print 'EXCUTION TIME: '+str(t2)
 
         INPUT.close()
         OUTPUT.close()
 
     sys.stdin = save_input
     sys.stdout = save_output
+
+    for i in range( test_case ):
+        candidate = open(output_file_name+str(i)+'.txt','r')
+        solution = open(solution_file_name+str(i)+'.txt','r')
+        flag = is_matched(candidate, solution)
+        if flag:
+            print 'TEST%d PASS'%i
+        else:
+            print 'TEST%d FAIL'%i
 
