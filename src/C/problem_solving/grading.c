@@ -1,45 +1,107 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 char* INPUT = "input";
 char* OUTPUT = "output";
 char* SOL = "sol";
+int TIMEOVER = 1;
+int WRONGANS = 2;
 
 int main(int argc, char** argv){
-    char input_name[20];
-    char output_name[20];
-    char solution_name[20];
+    char input[20];
+    char output[20];
+    char solution[20];
+    char path[20];
+    char result[20];
     char buf[80];
 
     int test_case;
+    int stat;
     int i;
+
+    double sec;
+    double time_limit;
 
     time_t start_time;
     time_t end_time;
 
-    printf("How many input files? ");
+    FILE* fin;
+    FILE* fout;
+
+    printf("What is the path of problem? ");
+    scanf("%s", path);
+
+    printf("How many input files are in the path? ");
     scanf("%d", &test_case);
+
+    printf("What is the time limit (sec)? ");
+    scanf("%lf", &time_limit);
+
+    sprintf(buf, "gcc %s/main.c -o %s/main", path, path);
+    system( buf );
+
+    sprintf(result, "%s/result.txt", path);
+
+    stat = 0;
 
     for (i=0; i<test_case; i++){
 
-        sprintf(buf, "gcc %s.c -o %s", argv[argc-1], argv[argc-1]);
-        system( buf );
+        sprintf(input, "%s/%s%d%s", path, INPUT, i, ".txt");
+        sprintf(output, "%s/%s%d%s", path, OUTPUT, i, ".txt");
+        sprintf(solution, "%s/%s%d%s", path, SOL, i, ".txt");
 
-        sprintf(input_name, "%s%d%s", INPUT, i, ".txt");
-        sprintf(output_name, "%s%d%s", OUTPUT, i, ".txt");
-
-        sprintf(buf, "./%s < %s > %s", argv[argc-1], input_name, output_name);
+        sprintf(buf, "./%s/main < %s > %s", path, input, output);
 
         start_time = clock();
         system( buf );
         end_time = clock();
 
-        sprintf(buf, "rm %s", argv[argc-1]);
+        sec = (double)(end_time-start_time)/CLOCKS_PER_SEC;
+
+        sprintf(buf, "diff -q %s %s > %s", output, solution, result);
         system( buf );
 
-        printf("time diff= %lf\n", (float)(end_time-start_time)/CLOCKS_PER_SEC);
+        sprintf(buf, "rm %s", output);
+        system( buf );
+
+        buf[0] = '\0';
+        fin = fopen(result, "r");
+        fscanf(fin, "%[^\n]s", buf);
+        fclose( fin );
+
+        if (sec > time_limit){
+            stat = TIMEOVER;
+            break;
+        } else if ( strlen( buf ) > 1 ){
+            stat = WRONGANS;
+            break;
+        }
     }
+    sprintf(buf, "rm %s/main", path);
+    system( buf );
+
+    sprintf(buf, "rm %s", result);
+    system( buf );
+
+    fout = fopen(result, "w");
+
+    switch (stat){
+    case 0:
+        fprintf(fout, "Okay! :D\n");
+        break;
+    case 1:
+        fprintf(fout, "Time over :<\n");
+        break;
+    case 2:
+        fprintf(fout, "Wrong answer :(\n");
+        break;
+    default:
+        fprintf(fout, "Wrong status, plz ask programmers.\n");
+    }
+
+    fclose( fout );
 
     return 0;
 }
