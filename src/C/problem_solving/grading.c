@@ -9,12 +9,14 @@ char* SOL = "sol";
 int TIMEOVER = 1;
 int WRONGANS = 2;
 
+int debug(int);
+
 int main(int argc, char** argv){
-    char input[20];
-    char output[20];
-    char solution[20];
-    char path[20];
-    char result[20];
+    char input[80];
+    char output[80];
+    char solution[80];
+    char path[80];
+    char result[80];
     char buf[80];
 
     int test_case;
@@ -30,7 +32,7 @@ int main(int argc, char** argv){
     FILE* fin;
     FILE* fout;
 
-    printf("What is the path of problem? ");
+    printf("What is the path of problem directory? ");
     scanf("%s", path);
 
     printf("How many input files are in the path? ");
@@ -68,7 +70,7 @@ int main(int argc, char** argv){
 
         buf[0] = '\0';
         fin = fopen(result, "r");
-        fscanf(fin, "%[^\n]s", buf);
+        fscanf(fin, "%79[^\n]s", buf);    // string input until meeting '\n'
         fclose( fin );
 
         if (sec > time_limit){
@@ -82,8 +84,10 @@ int main(int argc, char** argv){
     sprintf(buf, "rm %s/main", path);
     system( buf );
 
+    /*
     sprintf(buf, "rm %s", result);
     system( buf );
+    */
 
     fout = fopen(result, "w");
 
@@ -95,7 +99,7 @@ int main(int argc, char** argv){
         fprintf(fout, "Time over :<\n");
         break;
     case 2:
-        fprintf(fout, "Wrong answer :(\n");
+        fprintf(fout, "Wrong answer in file[%d] :(\n", i);
         break;
     default:
         fprintf(fout, "Wrong status, plz ask programmers.\n");
@@ -103,5 +107,12 @@ int main(int argc, char** argv){
 
     fclose( fout );
 
+    sprintf(buf, "cat %s", result);
+    system( buf );
+
     return 0;
+}
+
+int debug(int n){
+    return printf("%d\n", n);
 }

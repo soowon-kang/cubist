@@ -1,5 +1,7 @@
 Auther: Soowon Kang
 
+    @ grading.c
+
 The grading.c can grade an independent *.c file which has one main() function.
 You have to create all input/solution files before you grade a problem.
 When you execute the grading.c, there are 3 questions.
@@ -10,6 +12,9 @@ When you execute the grading.c, there are 3 questions.
 The names of input files should be 'input*.txt'.(* is a number.)
 The names of soluiton files should be 'sol*.txt'.(* is a number.)
 The number should be gradually increasing started by 0.
+
+The script file which is named grade can compile grading.c and excute it.
+You can just excute grade and input some appropriate arguments.
 
 An excution example is below.
 
@@ -39,7 +44,6 @@ An excution example is below.
     1*8=8
     1*9=9
 
-    $ gcc grading.c -o grade
     $ ./grade
     What is the path of problem? p1
     How many input files are in the path? 9
@@ -58,3 +62,53 @@ An excution example is below.
 
     $ cat p1/result.txt
     Okay! :D
+
+-------------------------------------------------------------------------------
+
+    @ txt_maker.c
+
+The txt_maker.c can make some test files of problem set for grading.
+You can just compile and excute it.
+
+An excution example is below.
+
+    $ gcc txt_maker.c -o make_txt
+
+    $ ./make_txt
+    What is the path of problem directory? factorial
+    What is the mode? (input/sol) input
+    How many files do you want to make? 5
+    Start input0.txt data input! (\n for END)
+    0 
+
+    Start input1.txt data input! (\n for END)
+    1
+
+    Start input2.txt data input! (\n for END)
+    2
+
+    Start input3.txt data input! (\n for END)
+    3
+
+    Start input4.txt data input! (\n for END)
+    4
+
+    $ ./make_txt
+    What is the path of problem directory? factorial
+    What is the mode? (input/sol) sol
+    How many files do you want to make? 5
+    Start sol0.txt data input! (\n for END)
+    1
+
+    Start sol1.txt data input! (\n for END)
+    1
+
+    Start sol2.txt data input! (\n for END)
+    2
+
+    Start sol3.txt data input! (\n for END)
+    6
+
+    Start sol4.txt data input! (\n for END)
+    24
+
