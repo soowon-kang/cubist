@@ -526,7 +526,7 @@ if __name__ == "__main__":
     q = Queue(data)
     s = Stack(data)
     l = LinkedList(data)
-    b = BinaryTree(data)
+    b = CompleteBinaryTree(data)
     print "data: ", data
     print "Queue: ", q
     print "Stack: ", s
@@ -564,5 +564,58 @@ if __name__ == "__main__":
         #t = b.get_value()   #wrong
     print 'size of binary tree', b.size()
     del b
+
+    print 'An example of binary tree construction.'
+    j = _TreeElement( 'J' )
+    w = _TreeElement( 'W' )
+    z = _TreeElement( 'Z' )
+    r = _TreeElement( 'R' )
+    l = _TreeElement( 'L' )
+    e = _TreeElement( 'E' )
+    h = _TreeElement( 'H' )
+    c = _TreeElement( 'C' )
+    x = _TreeElement( 'X' )
+    k = _TreeElement( 'K' )
+    y = _TreeElement( 'Y' )
+    s = _TreeElement( 'S' )
+    q = _TreeElement( 'Q' )
+    t = _TreeElement( 'T' )
+    a = _TreeElement( 'A' )
+    b = _TreeElement( 'B' )
+    p = _TreeElement( 'P' )
+    d = _TreeElement( 'D' )
+    f = _TreeElement( 'F' )
+    m = _TreeElement( 'M' )
+    n = _TreeElement( 'N' )
+    u = _TreeElement( 'U' )
+    g = _TreeElement( 'G' )
+    z.set_left( j )
+    z.set_right( w )
+    l.set_left( z )
+    l.set_right( r )
+    e.set_left( h )
+    e.set_right( l )
+    x.set_left( e )
+    x.set_right( c )
+    k.set_left( x )
+    t.set_left( s )
+    t.set_right( q )
+    y.set_right( a )
+    y.set_left( t )
+    k.set_right( y )
+    n.set_left( u )
+    n.set_right( g )
+    f.set_left( m )
+    f.set_right( n )
+    p.set_left( d )
+    p.set_right( f )
+    b.set_left( k )
+    b.set_right( p )
+    
+    print 'preorder :', b.preorder()
+    print 'postorder :', b.postorder()
+    print 'inorder :', b.inorder()
+
+    del a,b,c,d,e,f,g,h,j,k,l,m,n,p,q,r,s,t,u,w,x,y,z
 
     pass
