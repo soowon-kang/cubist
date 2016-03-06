@@ -6,8 +6,12 @@
 char* INPUT = "input";
 char* OUTPUT = "output";
 char* SOL = "sol";
-int TIMEOVER = 1;
-int WRONGANS = 2;
+
+const int NONE = 0;
+const int TIMEOVER = 1;
+const int WRONGANS = 2;
+const int CTYPE = 1;
+const int PYTYPE = 2;
 
 int debug(int);
 
@@ -18,10 +22,12 @@ int main(int argc, char** argv){
     char path[80];
     char result[80];
     char buf[80];
+    char lang[80];
 
     int test_case;
     int stat;
     int i;
+    int flag_lang;
 
     double sec;
     double time_limit;
@@ -41,12 +47,28 @@ int main(int argc, char** argv){
     printf("What is the time limit (sec)? ");
     scanf("%lf", &time_limit);
 
-    sprintf(buf, "gcc %s/main.c -o %s/main", path, path);
-    system( buf );
+    flag_lang = NONE;
+
+    while (flag_lang == NONE){
+        printf("What is the language of main test file ('python' or 'C')? ");
+        scanf("%s", lang);
+
+        if (strcmp(lang, "C") == 0 || strcmp(lang, "c") == 0){
+            flag_lang = CTYPE;
+            sprintf(buf, "gcc %s/main.c -o %s/main", path, path);
+            system( buf );
+        }
+        else if (strcmp(lang, "python") == 0 || strcmp(lang, "Python") == 0){
+            flag_lang = PYTYPE;
+        }
+        else {
+            printf("Wrong language. Please input right one.\n");
+        }
+    }
 
     sprintf(result, "%s/result.txt", path);
 
-    stat = 0;
+    stat = NONE;
 
     for (i=0; i<test_case; i++){
 
@@ -54,7 +76,14 @@ int main(int argc, char** argv){
         sprintf(output, "%s/%s%d%s", path, OUTPUT, i, ".txt");
         sprintf(solution, "%s/%s%d%s", path, SOL, i, ".txt");
 
-        sprintf(buf, "./%s/main < %s > %s", path, input, output);
+        if (flag_lang == CTYPE)
+            sprintf(buf, "./%s/main < %s > %s", path, input, output);
+        else if (flag_lang ==PYTYPE)
+            sprintf(buf, "python %s/main.py < %s > %s", path, input, output);
+        else {
+            printf("Wrong status. Program terminates.\n");
+            return 1;
+        }
 
         start_time = clock();
         system( buf );
@@ -81,8 +110,10 @@ int main(int argc, char** argv){
             break;
         }
     }
-    sprintf(buf, "rm %s/main", path);
-    system( buf );
+    if (flag_lang == CTYPE){
+        sprintf(buf, "rm %s/main", path);
+        system( buf );
+    }
 
     /*
     sprintf(buf, "rm %s", result);

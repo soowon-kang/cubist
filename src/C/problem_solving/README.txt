@@ -2,21 +2,24 @@ Auther: Soowon Kang
 
     @ grading.c
 
-The grading.c can grade an independent *.c file which has one main() function.
-You have to create all input/solution files before you grade a problem.
-When you execute the grading.c, there are 3 questions.
+The grading.c can grade an '*/main.c' file which has one main() function,
+and it can also grade an '*/main.py' file. (* is a path of a problem.'
+You can choose one language type of them.
+You have to create all input and solution files before you grade a problem.
+When you execute this 'grading.c', there are 4 questions.
 1. You should input the path (directory) of a problem set.
 2. You should input the number of test cases in integer number format.
 3. You should input the time limit in floating number format.
+4. You should input a language type of main file which you want to grade.
 
 The names of input files should be 'input*.txt'.(* is a number.)
 The names of soluiton files should be 'sol*.txt'.(* is a number.)
 The number should be gradually increasing started by 0.
 
-The script file which is named grade can compile grading.c and excute it.
-You can just excute grade and input some appropriate arguments.
+After making an executable file which is named as 'grade',
+you can just excute 'grade' and input some appropriate arguments.
 
-An excution example is below.
+Excution examples are as follows.
 
     $ cat p1/main.c
     #include <stdio.h>
@@ -44,10 +47,13 @@ An excution example is below.
     1*8=8
     1*9=9
 
+    $ gcc grading.c -o grade
     $ ./grade
     What is the path of problem? p1
     How many input files are in the path? 9
     What is the time limit (sec)? 1.0
+    What is the language of main test file? 'python' or 'C' C
+    Okay! :D
 
     $ cat p1/output0.txt
     1*1=1

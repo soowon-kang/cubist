@@ -1,4 +1,0 @@
-gcc grading.c;
-./a.out;
-rm a.out;
-
