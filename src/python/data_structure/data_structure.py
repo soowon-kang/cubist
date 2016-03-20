@@ -341,6 +341,7 @@ class _TreeElement():
         self._left = None
         self._right = None
         self._node = Node( value )
+        self._height = 1
         pass
 
     def __str__(self):
@@ -349,6 +350,16 @@ class _TreeElement():
     def __del__(self):
         del self._node
         pass
+
+    def __cmp__(self, other):
+        if isinstance(other, _TreeElement):
+            return cmp(self._node.get_value(), other._node.get_value())
+        else:
+            if other == None:
+                return -1
+            raise TypeError("Invalid class %s is detected."%(other))
+        pass
+
 
     def _check_elem(self, elem=None):
         """(private)Check the validity of element."""
@@ -375,6 +386,11 @@ class _TreeElement():
         self._node = Node( value )
         pass
 
+    def set_height(self, value=1):
+        assert isinstance(value, int)
+        self._height = value
+        pass
+
     def get_parent(self):
         return self._parent
 
@@ -386,6 +402,25 @@ class _TreeElement():
 
     def get_value(self):
         return self._node.get_value()
+
+    def get_height(self):
+        self._calc_height()
+        return self._height
+
+    def _calc_height(self):
+        l = self.get_left()
+        r = self.get_right()
+        lh = 0
+        if l:
+            lh = l.get_height()
+        rh = 0
+        if r:
+            rh = r.get_height()
+        if lh < rh:
+            self._height = rh+1
+        else:
+            self._height = lh+1
+
 
     def preorder(self):
         string = ""
@@ -439,7 +474,7 @@ class CompleteBinaryTree():
         pass
 
     def __str__(self):
-        return self.inorder_travel()
+        return self.inorder_traversal()
 
     def __del__(self):
         pass
@@ -464,8 +499,10 @@ class CompleteBinaryTree():
             self._root = v
         elif num == '0':
             node.set_left( v )
+            v.set_parent( node )
         elif num == '1':
             node.set_right( v )
+            v.set_parent( node )
         else:
             raise ValueError("Invalid State.")
 
@@ -503,13 +540,257 @@ class CompleteBinaryTree():
         self._size -= 1
         pass
 
-    def preorder_travel(self):
+    def preorder_traversal(self):
         return self._root.preorder()
 
-    def inorder_travel(self):
+    def inorder_traversal(self):
         return self._root.inorder()
 
-    def postorder_travel(self):
+    def postorder_traversal(self):
+        return self._root.postorder()
+
+    def size(self):
+        return self._size
+
+    pass
+
+# TODO
+class AVLTree():
+    "Adelson-Velsky & Landis'62: self-balancign binary search tree.\
+    Heights of any two sibling subtrees must differ by at most one."
+
+    def __init__(self, *values):
+        """Create a AVL tree."""
+        if not isinstance(values, list) and not isinstance(values, tuple):
+            raise TypeError("Invalid type of value list.")
+
+        self._root = None
+        self._size = 0
+
+        for val in values:
+            if isinstance(val, list):
+                for v in val:
+                    self.add( v )
+            else:
+                self.add( val )
+        pass
+
+    def __str__(self):
+        return self.preorder_traversal()
+    
+    def __del__(self):
+        del self._root
+        del self._size
+        pass
+
+    def add(self, value=None):
+        self._size += 1
+        if self._root == None:
+            self._root = _TreeElement( value )
+            return
+        cursor = self._root
+        while True:
+            if not isinstance(value, type(cursor.get_value())):
+                raise TypeError("Invalid type of value.")
+            if cursor.get_value() < value:
+                if cursor.get_right() == None:
+                    v = _TreeElement(value)
+                    v.set_parent( cursor )
+                    cursor.set_right( v )
+                    self._balancing( v )
+                    return
+                else:
+                    cursor = cursor.get_right()
+            else:
+                if cursor.get_left() == None:
+                    v = _TreeElement(value)
+                    v.set_parent( cursor )
+                    cursor.set_left( v )
+                    self._balancing( v )
+                    return
+                else:
+                    cursor = cursor.get_left()
+        pass
+
+    def remove(self, value=None):
+        elem = self._root
+        while elem != None:
+            v = elem.get_value()
+            if v < value:
+                elem = elem.get_right()
+            elif value < v:
+                elem = elem.get_left()
+            elif v == value:
+                # type check is needed
+                break
+            else:
+                raise ValueError('Invalid value.')
+        if elem != None:
+            self._size -= 1
+            parent = elem.get_parent()
+            leftmost = elem.get_right()
+            l = elem.get_left()
+            while leftmost != None and leftmost.get_left() != None:
+                leftmost = leftmost.get_left()
+            if leftmost != None:
+                if parent != None:
+                    if parent.get_value() < value:
+                        parent.set_right( leftmost )
+                    else:
+                        parent.set_left( leftmost )
+                else:
+                    self._root = leftmost
+                lp = leftmost.get_parent()
+                if lp != elem:
+                    lr = leftmost.get_right()
+                    lp.set_left( lr )
+                    if lr != None:
+                        lr.set_parent( lp )
+                    er = elem.get_right()
+                    leftmost.set_right( er )
+                    er.set_parent( leftmost )
+
+                leftmost.set_parent( parent )
+                leftmost.set_left( l )
+                if l != None:
+                    l.set_parent( leftmost )
+            else:
+                if parent != None:
+                    if parent.get_value() < value:
+                        parent.set_right( l )
+                    else:
+                        parent.set_left( l )
+                else:
+                    self._root = l
+                if l != None:
+                    l.set_parent( parent )
+
+            elem.set_parent( None )
+            elem.set_left( None )
+            elem.set_right( None )
+            if parent != None:
+                pr = parent.get_right()
+                pl = parent.get_left()
+                if pl != None:
+                    pll = pl.get_left()
+                    plr = pl.get_right()
+                    if pll != None:
+                        self._balancing( pll )
+                    if plr != None:
+                        self._balancing( plr )
+                if pr != None:
+                    prr = pr.get_right()
+                    prl = pr.get_left()
+                    if prl != None:
+                        self._balancing( prl )
+                    if prr != None:
+                        self._balancing( prr )
+        else:
+            raise ValueError('There is no such element.')
+        pass
+
+    def _calc_height(self):
+        self._root.get_height()
+
+    def _balancing(self, elem=None):
+        if not isinstance(elem, _TreeElement):
+            raise TypeError("Invalid type of value.")
+        self._calc_height()
+        parent = elem.get_parent()
+        saved_elem = elem
+
+        while parent != None:
+            r = parent.get_right()
+            l = parent.get_left()
+            avl = 0
+            if r != None:
+                avl += r.get_height()
+            if l != None:
+                avl -= l.get_height()
+
+            if -1 <= avl <= 1:
+                saved_elem = elem
+                elem = parent
+                parent = elem.get_parent()
+            else:
+                # need to balance
+                p = parent.get_parent()
+                x = parent.get_value()
+                y = elem.get_value()
+                z = saved_elem.get_value()
+                mid = elem
+                if z <= y:
+                    if y <= x:
+                        mid = elem
+                        r = elem.get_right()
+                        parent.set_left( r )
+                        if r != None:
+                            r.set_parent( parent )
+                        #elem.set_left( saved_elem )
+                        elem.set_right( parent )
+                        #saved_elem.set_parent( elem )
+                        parent.set_parent( elem )
+                        temp = parent.get_right()
+                    else:
+                        mid = saved_elem
+                        l = saved_elem.get_left()
+                        r = saved_elem.get_right()
+                        parent.set_right( l )
+                        if l != None:
+                            l.set_parent( parent )
+                        elem.set_left( r )
+                        if r != None:
+                            r.set_parent( elem )
+                        saved_elem.set_left( parent )
+                        saved_elem.set_right( elem )
+                        parent.set_parent( saved_elem )
+                        elem.set_parent( saved_elem )
+                        temp = parent.get_left()
+                else:
+                    if y <= x:
+                        mid = saved_elem
+                        l = saved_elem.get_left()
+                        r = saved_elem.get_right()
+                        parent.set_left( r )
+                        if r != None:
+                            r.set_parent( parent )
+                        elem.set_right( l )
+                        if l != None:
+                            l.set_parent( elem )
+                        saved_elem.set_left( elem )
+                        saved_elem.set_right( parent )
+                        elem.set_parent( saved_elem )
+                        parent.set_parent( saved_elem )
+                        temp = parent.get_right()
+                    else:
+                        mid = elem
+                        l = elem.get_left()
+                        parent.set_right( l )
+                        if l != None:
+                            l.set_parent( parent )
+                        elem.set_left( parent )
+                        #elem.set_right( saved_elem )
+                        parent.set_parent( elem )
+                        #saved_elem.set_parent( elem )
+                
+                mid.set_parent( p )
+                if p != None:
+                    if mid.get_value() <= p.get_value():
+                        p.set_left( mid )
+                    else:
+                        p.set_right( mid )
+                else:
+                    self._root = mid
+                break
+        pass
+
+    def preorder_traversal(self):
+        return self._root.preorder()
+
+    def inorder_traversal(self):
+        return self._root.inorder()
+
+    def postorder_traversal(self):
         return self._root.postorder()
 
     def size(self):
@@ -523,16 +804,10 @@ class BitMap():
 # TEST
 if __name__ == "__main__":
     data = [82,6309,96346,2,26,3,96,246,0,245,2,9,253,25]
-    q = Queue(data)
-    s = Stack(data)
-    l = LinkedList(data)
-    b = CompleteBinaryTree(data)
     print "data: ", data
-    print "Queue: ", q
-    print "Stack: ", s
-    print "Linked List: ", type(l), l, type(str(l))
-    print "Binary Tree: ", b
 
+    q = Queue(data)
+    print "Queue: ", q
     print 'size of queue', q.size()
     for i in xrange(q.size()):
         t = q.pop()
@@ -540,13 +815,17 @@ if __name__ == "__main__":
     print 'size of queue', q.size()
     del q
 
+    s = Stack(data)
+    print "Stack: ", s
     print 'size of stack', s.size()
     for i in xrange(s.size()):
         t = s.pop()
         print "Stack %d"%i, t
     print 'size of stack', s.size()
     del s
-
+    
+    l = LinkedList(data)
+    print "Linked List: ", type(l), l, type(str(l))
     print 'size of linked list', l.size()
     for i in xrange(l.size()):
         t = l.get_value()
@@ -554,12 +833,14 @@ if __name__ == "__main__":
         print "Linked List %d"%i, t
     print 'size of linked list', l.size()
     del l
-
+    
+    b = CompleteBinaryTree(data)
+    print "Binary Tree: ", b
     for i in xrange(b.size()):
         print 'size of binary tree', b.size()
-        print b.preorder_travel()
-        print b.inorder_travel()
-        print b.postorder_travel()
+        print b.preorder_traversal()
+        print b.inorder_traversal()
+        print b.postorder_traversal()
         b.remove()
         #t = b.get_value()   #wrong
     print 'size of binary tree', b.size()
@@ -617,5 +898,18 @@ if __name__ == "__main__":
     print 'inorder :', b.inorder()
 
     del a,b,c,d,e,f,g,h,j,k,l,m,n,p,q,r,s,t,u,w,x,y,z
+
+    avl = AVLTree(data)
+    print "AVLTree: ", avl
+
+    for t in data:
+        print 'size of avl tree', avl.size()
+        print 'pre ', avl.preorder_traversal()
+        print 'in  ', avl.inorder_traversal()
+        print 'post', avl.postorder_traversal()
+        avl.remove( t )
+        print 'remove', t
+    print 'size of avl tree', avl.size()
+    del avl
 
     pass
