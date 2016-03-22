@@ -134,8 +134,10 @@ class Queue():
         pass
 
     def __del__(self):
-        del self._default_priority
+        for _ in xrange( self._size ):
+            self.pop()
         del self._queue
+        del self._default_priority
         pass
 
     pass
@@ -158,6 +160,8 @@ class Stack():
         pass
 
     def __del__(self):
+        for _ in xrange( self._size ):
+            self.pop()
         del self._stack
         pass
 
@@ -348,7 +352,11 @@ class _TreeElement():
         return str( self._node.get_value() )
 
     def __del__(self):
+        self._parent = None
+        self._left = None
+        self._right = None
         del self._node
+        del self._height
         pass
 
     def __cmp__(self, other):
@@ -477,6 +485,10 @@ class CompleteBinaryTree():
         return self.inorder_traversal()
 
     def __del__(self):
+        for _ in xrange( self._size ):
+            self.remove()
+        del self._size
+        del self._root
         pass
 
     def add(self, value):
@@ -584,6 +596,7 @@ class AVLTree():
         pass
 
     def add(self, value=None):
+        """Add a node with avl condition."""
         self._size += 1
         if self._root == None:
             self._root = _TreeElement( value )
@@ -613,6 +626,7 @@ class AVLTree():
         pass
 
     def remove(self, value=None):
+        """Remove a node which value is same as argument."""
         elem = self._root
         while elem != None:
             v = elem.get_value()
@@ -693,6 +707,7 @@ class AVLTree():
         self._root.get_height()
 
     def _balancing(self, elem=None):
+        """(private) Check and reconstruct the avl condition."""
         if not isinstance(elem, _TreeElement):
             raise TypeError("Invalid type of value.")
         self._calc_height()
