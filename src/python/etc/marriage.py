@@ -11,7 +11,7 @@ def verify_matching(matched_list=[], men=[], women=[]):
     pass
 
 if __name__ == "__main__":
-    m = ((3,2,1),(3,2,1),(3,2,1))
-    w = ((1,2,3),(1,2,3),(1,2,3))
+    m = ((3,2,1), (3,2,1), (3,2,1))
+    w = ((1,2,3), (1,2,3), (1,2,3))
     print stable_matching(m, w)
 
