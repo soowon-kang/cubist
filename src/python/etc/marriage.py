@@ -2,6 +2,7 @@
 # This is HW for stable-matching algorithm.
 import random
 
+
 def stable_matching(men=[], women=[]):
     assert isinstance(men, list) or isinstance(men, tuple)
     assert isinstance(women, list) or isinstance(women, tuple)
@@ -43,11 +44,12 @@ def stable_matching(men=[], women=[]):
 
     return matched
 
+
 def verify_matching(matched_list=[], men=[], women=[]):
     n = len(matched_list)
     assert n == len(men)
     assert n == len(women)
-    husband=[-1 for _ in xrange(n)]
+    husband = [-1 for _ in xrange(n)]
     women_invert = [[-1 for i in xrange(n)] for j in xrange(n)]
     for man, woman in matched_list:
         husband[woman-1] = man-1
@@ -57,10 +59,10 @@ def verify_matching(matched_list=[], men=[], women=[]):
             women_invert[w][m-1] = p
 
     for m, w in matched_list:
-        m = m-1
-        w = w-1
+        m -= 1
+        w -= 1
         for w_candidate in men[m]:
-            w_candidate = w_candidate-1
+            w_candidate -= 1
             if w_candidate == w:
                 break
             m_candidate = husband[w_candidate]
@@ -70,13 +72,14 @@ def verify_matching(matched_list=[], men=[], women=[]):
                 return False
     return True
 
+
 if __name__ == "__main__":
-    #m = ((3, 2, 1), (3, 2, 1), (3, 2, 1))
-    #w = ((1, 2, 3), (1, 2, 3), (1, 2, 3))
+    # m = ((3, 2, 1), (3, 2, 1), (3, 2, 1))
+    # w = ((1, 2, 3), (1, 2, 3), (1, 2, 3))
     m = []
     w = []
     n = input()
-    arr = range(1,n+1)
+    arr = range(1, n+1)
     for i in xrange(n):
         random.shuffle(arr)
         m.append(arr[:])
