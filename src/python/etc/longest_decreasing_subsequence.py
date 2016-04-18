@@ -4,9 +4,9 @@
 def lds(arr):
     dp_arr = [1]
     max_item = 0
-    for i in xrange(len(arr)):
+    for i in xrange(1, len(arr)):
         dp_arr.append(1)
-        for j in xrange(i+1):
+        for j in xrange(i):
             if arr[i] < arr[j]:
                 dp_arr[i] = max(dp_arr[i], 1+dp_arr[j])
         max_item = max(max_item, dp_arr[i])
