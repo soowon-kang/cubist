@@ -4,7 +4,7 @@
 # convert decimal number to any base radix between 2 and 16
 # for example, DEC: 61 == BIN: 111101 == OCT: 75 == HEX: 3D
 
-STR_DIGIT = '0123456789ABCDEF'
+STR_DIGIT = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 def dec_to_any( num=20, base=5 ):
     result = str()
