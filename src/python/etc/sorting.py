@@ -34,11 +34,25 @@ def qsort(arr):
     mid, arr = _partition(arr)
     if mid == 0:
         return arr
-    print "arr", arr
     low = qsort(arr[:mid])
     high = qsort(arr[mid:])
     return low + high
 
+
+def msort(arr):
+    print arr
+    if len(arr) < 2:
+        return arr
+    idx = len(arr)/2
+    low = msort(arr[:idx])
+    high = msort(arr[idx:])
+    result = []
+    while len(low) > 0 and len(high) > 0:
+        if low[0] < high[0]:
+            result.append(low.pop(0))
+        else:
+            result.append(high.pop(0))
+    return result+low+high
 
 while True:
     # input a list of numbers
@@ -52,9 +66,14 @@ while True:
 
 
 print 'Here are the result'
-bubble_sorted_arr = bsort(arr_input)
-quick_sorted_arr = qsort(arr_input)
+bubble_sorted_arr = bsort(arr_input[:])
+quick_sorted_arr = qsort(arr_input[:])
+merge_sorted_arr = msort(arr_input[:])
 for i in range(len(bubble_sorted_arr)):
     print bubble_sorted_arr[i],
+print
 for i in range(len(quick_sorted_arr)):
     print quick_sorted_arr[i],
+print
+for i in range(len(merge_sorted_arr)):
+    print merge_sorted_arr[i],
