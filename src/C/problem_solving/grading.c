@@ -21,8 +21,10 @@ int main(int argc, char** argv){
     char solution[80];
     char path[80];
     char result[80];
-    char buf[80];
+    char buf[200];
     char lang[80];
+    char sid[10];
+    char spath[80];
 
     int test_case;
     int stat;
@@ -37,6 +39,7 @@ int main(int argc, char** argv){
 
     FILE* fin;
     FILE* fout;
+    FILE* students;
 
     printf("What is the path of problem directory? ");
     scanf("%s", path);
@@ -66,24 +69,28 @@ int main(int argc, char** argv){
         }
     }
 
-    sprintf(result, "%s/result.txt", path);
+    sprintf(buf, "%s/students.txt", path);
+    students = fopen(buf, "r");
 
+    while (fscanf(students, "%8s", sid) != EOF){
+        sprintf(spath, "%s/PA2_%s", path, sid);
+    sprintf(result, "%s/result.txt", spath);
     stat = NONE;
 
     for (i=0; i<test_case; i++){
-
-        sprintf(input, "%s/%s%d%s", path, INPUT, i, ".txt");
-        sprintf(output, "%s/%s%d%s", path, OUTPUT, i, ".txt");
-        sprintf(solution, "%s/%s%d%s", path, SOL, i, ".txt");
+        sprintf(input, "%s/testcase/%s_%d.txt", path, INPUT, i+1);
+        sprintf(output, "%s/testcase/%s_%d.txt", path, OUTPUT, i+1);
+        sprintf(solution, "%s/%s_%d.txt", spath, SOL, i+1);
 
         if (flag_lang == CTYPE)
-            sprintf(buf, "./%s/main < %s > %s", path, input, output);
-        else if (flag_lang ==PYTYPE)
-            sprintf(buf, "python %s/main.py < %s > %s", path, input, output);
+            sprintf(buf, "./%s/main < %s > %s", spath, input, solution);
+        else if (flag_lang == PYTYPE)
+            sprintf(buf, "python %s/PA2_%s.py %s > %s", spath, sid, input, solution);
         else {
             printf("Wrong status. Program terminates.\n");
             return 1;
         }
+    printf("%s\n", buf);
 
         start_time = clock();
         system( buf );
@@ -94,8 +101,10 @@ int main(int argc, char** argv){
         sprintf(buf, "diff -q %s %s > %s", output, solution, result);
         system( buf );
 
-        sprintf(buf, "rm %s", output);
+        /*
+        sprintf(buf, "rm %s", solution);
         system( buf );
+        */
 
         buf[0] = '\0';
         fin = fopen(result, "r");
@@ -140,6 +149,9 @@ int main(int argc, char** argv){
 
     sprintf(buf, "cat %s", result);
     system( buf );
+    }
+
+    fclose( students );
 
     return 0;
 }
