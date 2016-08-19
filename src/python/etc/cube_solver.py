@@ -1,5 +1,6 @@
-from copy import deepcopy
 from sys import getsizeof
+from random import choice
+from time import time
 
 class Color:
     """One of the color of the Cube"""
@@ -590,8 +591,6 @@ class Solver2:
                 second_last_command = ""
                 if t and len(t) > 0:
                     last_command = t[-1]
-                    if len(t) > 1:
-                        second_last_command = t[-2]
 
                 if last_command in self._U:
                     try_command = self._U_after
@@ -619,6 +618,26 @@ class Solver2:
                     for command in t:
                         cube.inverse_move(command)
             sequence = temp
+
+    def scremble(self, num=20):
+        assert isinstance(num, int)
+        sequence = [choice(self._valid_command)]    # random.choice
+        cube = self._cube
+        for i in range(num-1):
+            if sequence[-1] in self._U:
+                sequence.append(choice(self._U_after))
+            elif sequence[-1] in self._F:
+                sequence.append(choice(self._F_after))
+            elif sequence[-1] in self._R:
+                sequence.append(choice(self._R_after))
+            else:
+                sequence.append(choice(self._valid_command))
+        
+        for t in sequence:
+            cube.move(t)
+
+        return " ".join(sequence)
+    pass
 
 
 class Solver3:
@@ -720,6 +739,7 @@ class Solver3:
                         cube.inverse_move(command)
             sequence = temp
 
+    """
     def solve_with_memory(self):
         sequence = [None]
         while True:
@@ -786,7 +806,7 @@ class Solver3:
             del sequence
             sequence = temp
             # print sequence
-
+    """
 
 def user_test(state):
     assert isinstance(state, State3) or isinstance(state, State2), "State2 or State3 is required"
@@ -846,50 +866,50 @@ if __name__ == "__main__":
     cube222 = State2(lst)
 
     lst = []
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(g))
+    lst.append(w)
+    lst.append(o)
+    lst.append(w)
+    lst.append(g)
     lst = tuple(lst)
     F = Face2(lst)
 
     lst = []
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(b))
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(g))
+    lst.append(w)
+    lst.append(b)
+    lst.append(r)
+    lst.append(g)
     lst = tuple(lst)
     U = Face2(lst)
 
     lst = []
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(b))
-    lst.append(deepcopy(g))
-    lst.append(deepcopy(g))
+    lst.append(o)
+    lst.append(b)
+    lst.append(g)
+    lst.append(g)
     lst = tuple(lst)
     L = Face2(lst)
 
     lst = []
-    lst.append(deepcopy(y))
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(b))
+    lst.append(y)
+    lst.append(r)
+    lst.append(r)
+    lst.append(b)
     lst = tuple(lst)
     R = Face2(lst)
 
     lst = []
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(y))
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(y))
+    lst.append(r)
+    lst.append(y)
+    lst.append(o)
+    lst.append(y)
     lst = tuple(lst)
     D = Face2(lst)
 
     lst = []
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(b))
-    lst.append(deepcopy(y))
+    lst.append(w)
+    lst.append(o)
+    lst.append(b)
+    lst.append(y)
     lst = tuple(lst)
     B = Face2(lst)
 
@@ -933,80 +953,80 @@ if __name__ == "__main__":
     o_all = Face3(lst)
 
     lst = []
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(g))
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(g))
+    lst.append(w)
+    lst.append(o)
+    lst.append(o)
+    lst.append(g)
+    lst.append(r)
+    lst.append(w)
+    lst.append(w)
+    lst.append(o)
+    lst.append(g)
     lst = tuple(lst)
     F = Face3(lst)
 
     lst = []
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(b))
-    lst.append(deepcopy(g))
-    lst.append(deepcopy(y))
-    lst.append(deepcopy(y))
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(g))
-    lst.append(deepcopy(g))
+    lst.append(w)
+    lst.append(o)
+    lst.append(b)
+    lst.append(g)
+    lst.append(y)
+    lst.append(y)
+    lst.append(r)
+    lst.append(g)
+    lst.append(g)
     lst = tuple(lst)
     U = Face3(lst)
 
     lst = []
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(b))
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(b))
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(g))
-    lst.append(deepcopy(y))
-    lst.append(deepcopy(g))
+    lst.append(o)
+    lst.append(r)
+    lst.append(b)
+    lst.append(r)
+    lst.append(b)
+    lst.append(w)
+    lst.append(g)
+    lst.append(y)
+    lst.append(g)
     lst = tuple(lst)
     L = Face3(lst)
 
     lst = []
-    lst.append(deepcopy(y))
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(b))
-    lst.append(deepcopy(g))
-    lst.append(deepcopy(g))
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(b))
+    lst.append(y)
+    lst.append(r)
+    lst.append(r)
+    lst.append(b)
+    lst.append(g)
+    lst.append(g)
+    lst.append(r)
+    lst.append(o)
+    lst.append(b)
     lst = tuple(lst)
     R = Face3(lst)
 
     lst = []
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(y))
-    lst.append(deepcopy(y))
-    lst.append(deepcopy(b))
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(r))
-    lst.append(deepcopy(y))
+    lst.append(r)
+    lst.append(y)
+    lst.append(y)
+    lst.append(b)
+    lst.append(w)
+    lst.append(w)
+    lst.append(o)
+    lst.append(r)
+    lst.append(y)
     lst = tuple(lst)
     D = Face3(lst)
 
     lst = []
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(b))
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(w))
-    lst.append(deepcopy(o))
-    lst.append(deepcopy(y))
-    lst.append(deepcopy(b))
-    lst.append(deepcopy(b))
-    lst.append(deepcopy(y))
+    lst.append(w)
+    lst.append(b)
+    lst.append(o)
+    lst.append(w)
+    lst.append(o)
+    lst.append(y)
+    lst.append(b)
+    lst.append(b)
+    lst.append(y)
     lst = tuple(lst)
     B = Face3(lst)
 
@@ -1060,16 +1080,14 @@ if __name__ == "__main__":
     print getsizeof(solver)
 
     print solver.get_answer()
-    """
+
     print "222 start"
     print "BEFORE >>> "
     # print cube222
     print s2
-    """
     string = "R' U' R' F'"
     for ss in string.split():
         cube222.move(ss)
-    """
     print "AFTER >>> "
     # print cube222
     print s2
@@ -1078,5 +1096,20 @@ if __name__ == "__main__":
     solver222s = Solver2(s2)
     print solver222s.get_answer()
     print "end"
+    """
 
+    for i in range(1):
+        print
+        print "random scremble"
+        print "BEFORE >>> "
+        print cube222
+        solve2 = Solver2(cube222)
+        print solve2.scremble()
+        print "solve start"
+        print "AFTER >>> "
+        print solve2
+        t = time()
+        print solve2.get_answer()
+        t = time() - t
+        print "running time: %s" % t
 
