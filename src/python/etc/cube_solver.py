@@ -3,7 +3,7 @@ from random import choice
 from time import time
 
 class Color:
-    """One of the color of the Cube"""
+    """One of the colors of the Cube"""
     valid_colors = ("red", "blue", "yellow", "green", "white", "orange")
 
     def __init__(self, name):
@@ -21,7 +21,7 @@ class Color:
 
 
 class Face2:
-    """The color distribution of a face fo the 2x2x2 Cube"""
+    """The color allocation of a face of 2x2x2 Cube"""
 
     valid_angle=[90, 180, 270]
 
